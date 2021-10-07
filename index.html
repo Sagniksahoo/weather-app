@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- <link rel="stylesheet" href="style.css" /> -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Gemunu+Libre:wght@300&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Lora', serif;
+      text-align: center;
+      /* bottom: -50px; */
+      background: url(https://www.teahub.io/photos/full/0-6092_4k-background.jpg);
+      background-size: cover;
+    }
+
+    .pg {
+      bottom: -550%;
+      color: rgb(255, 255, 255);
+
+    }
+  </style>
+  <title>Weather App</title>
+</head>
+
+<body>
+  <div class="pg">
+    <h1 style="size: 980px;" id="temperature"></h1>
+    <h2 style="height: 150%;" id="description"></h2>
+    <p id="location"></p>
+  </div>
+</body>
+
+<!-- <script src="app.js"></script> -->
+
+<script>
+  function getWeather() {
+    let temperature = document.getElementById("temperature");
+    let description = document.getElementById("description");
+    let location = document.getElementById("location");
+
+    let api = "https://api.openweathermap.org/data/2.5/weather";
+    let apiKey = "f146799a557e8ab658304c1b30cc3cfd";
+
+    location.innerHTML = "Locating...";
+
+    navigator.geolocation.getCurrentPosition(success, error);
+
+    function success(position) {
+      latitude = position.coords.latitude;
+      longitude = position.coords.longitude;
+
+      let url =
+        api +
+        "?lat=" +
+        latitude +
+        "&lon=" +
+        longitude +
+        "&appid=" +
+        apiKey +
+        "&units=imperial";
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          let temp = data.main.temp;
+          temperature.innerHTML = temp + "° F";
+          location.innerHTML =
+            data.name + " (" + latitude + "°, " + longitude + "°)";
+          description.innerHTML = data.weather[0].main;
+        });
+    }
+
+    function error() {
+      location.innerHTML = "Unable to retrieve your location";
+    }
+  }
+
+  getWeather();
+
+</script>
+
+</html>
